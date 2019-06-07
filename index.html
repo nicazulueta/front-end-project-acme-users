@@ -1,6 +1,12 @@
 <html>
   <head>
 <style>
+a {
+  margin-right: 10px;
+}
+.selected {
+  background-color:thistle;
+}
 </style>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js'></script>
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
@@ -25,9 +31,9 @@
           return (
             <HashRouter>
               <Nav />
-              <Route path='/' />
-              <Route exact path='/home' component={Home} />
-              <Route exact path='/users/:idx?' render={()=> <Users/>}/>
+              <Route exact path='/' />
+              <Route path='/home' component={Home} />
+              <Route path='/users/:idx?' component={Users}/>
             </HashRouter>
           )
         }
@@ -62,12 +68,25 @@
         }
 
         async componentDidMount () {
-          const res = await axios.get(`https://acme-users-api-rev.herokuapp.com/api/users/`);
+          try {
+          const idx = this.props.match.params.idx || 0;
+          const res = await axios.get(`https://acme-users-api-rev.herokuapp.com/api/users/${idx}`);
           const users = res.data
           this.setState({count: users.count, users: users})
+          } catch (error) {
+          console.error(error)
+          }
+        }
+
+        componentDidUpdate (prevProps) {
+          if(prevProps.match.params.idx !== this.props.match.params.idx) {
+
+          }
         }
 
         render () {
+          const idx = this.props.match.params.idx ? this.props.match.params.idx*1 : 0;
+          console.log(idx)
           const users = this.state.users;
           const count = this.state.count;
           const countPerPage = 50;
@@ -88,7 +107,7 @@
           return (
             <div>
               <h3>{count} Results</h3>
-              {links.map(link => <Link to={`/users/${link.idx ? link.idx : ''}`} key={link.idx}>{link.text}</Link>)}
+              {links.map(link => <Link to={`/users/${link.idx ? link.idx : ''}`} key={link.idx} className={link.idx === idx ? 'selected':''}>{link.text}</Link>)}
               <table>
                 <tbody>
                   <tr>
