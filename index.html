@@ -144,6 +144,11 @@ a {
             search: ''
           }
           this.onChange = this.onChange.bind(this);
+          this.handleSubmit = this.handleSubmit.bind(this);
+        }
+
+        handleSubmit (event) {
+          event.preventDefault();
         }
 
         onChange (event) {
@@ -154,8 +159,10 @@ a {
 
         render () {
           const {search} = this.state;
+          const {handleSubmit} = this.state;
+          const filters = []
           return (
-            <form>
+            <form onSubmit = {handleSubmit}>
               <label>
                 <input type='text' value={search} onChange={this.onChange}/> 
                 <button type='submit'>Go</button>
