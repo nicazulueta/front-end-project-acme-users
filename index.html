@@ -111,6 +111,7 @@ a {
           return (
             <div>
               <h3>{count} Results</h3>
+              <SearchForm />
               {links.map(link => <Link to={`/users/${link.idx ? link.idx : ''}`} key={link.idx} className={link.idx === idx ? 'selected':''}>{link.text}</Link>)}
               <table>
                 <tbody>
@@ -135,6 +136,38 @@ a {
           )
         }
       }
+
+      class SearchForm extends React.Component {
+        constructor() {
+          super();
+          this.state = {
+            search: ''
+          }
+          this.onChange = this.onChange.bind(this);
+        }
+
+        onChange (event) {
+          const search = this.state.search;
+          this.setState({search: event.target.value})
+          console.log(this.state)
+        }
+
+        render () {
+          const {search} = this.state;
+          return (
+            <form>
+              <label>
+                <input type='text' value={search} onChange={this.onChange}/> 
+                <button type='submit'>Go</button>
+                <button type='reset'>Clear</button>
+              </label>
+            </form>
+          )
+        }
+      }
+    
+        
+
 
       const root = document.querySelector('#root');
       ReactDOM.render(<App />, root);
