@@ -78,9 +78,13 @@ a {
           }
         }
 
-        componentDidUpdate (prevProps) {
+        async componentDidUpdate (prevProps) {
+          const idx = this.props.match.params.idx || 0;
+          console.log(this.props)
           if(prevProps.match.params.idx !== this.props.match.params.idx) {
-
+            const res = await axios.get(`https://acme-users-api-rev.herokuapp.com/api/users/${idx}`);
+            const users = res.data
+            this.setState({count: users.count, users: users})
           }
         }
 
